@@ -1,0 +1,28 @@
+{
+  "name": "youneedreview",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "dev": "tsc && node ./out/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/node": "^24.5.2",
+    "@types/winston": "^2.4.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "@langchain/ollama": "^0.2.4",
+    "@langchain/openai": "^0.6.13",
+    "axios": "^1.12.2",
+    "dotenv": "^17.2.2",
+    "langchain": "^0.3.34",
+    "winston": "^3.17.0"
+  }
+}
