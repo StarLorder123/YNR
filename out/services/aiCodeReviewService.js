@@ -21,9 +21,14 @@ class AIReviewService {
         const latestCommit = commits[0];
         // 获取 commit 文件 diff
         const files = await this.github.getCommitFiles(owner, repo, latestCommit.sha);
-        const code = files.map((f) => `// File: ${f.filename}\n${f.patch}`).join("\n\n");
+        const diff = files.map((f) => `diff --git a/${f.filename} b/${f.filename}\n${f.patch}`).join("\n\n");
         // 生成 AI 消息
-        const messages = (0, codeReviewTemplate_1.createCodeReviewMessages)(code, "");
+        const messages = (0, codeReviewTemplate_1.createCodeReviewMessages)({
+            commit: latestCommit.sha,
+            author: latestCommit.author,
+            message: latestCommit.message,
+            diff
+        });
         // 调用 AI
         const review = (await this.ai.invoke(messages)).text;
         // 提交评论

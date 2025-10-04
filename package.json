@@ -13,6 +13,7 @@
   "description": "",
   "devDependencies": {
     "@types/node": "^24.5.2",
+    "@types/nodemailer": "^7.0.2",
     "@types/winston": "^2.4.4",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2"
@@ -23,6 +24,7 @@
     "axios": "^1.12.2",
     "dotenv": "^17.2.2",
     "langchain": "^0.3.34",
+    "nodemailer": "^6.9.14",
     "winston": "^3.17.0"
   }
 }

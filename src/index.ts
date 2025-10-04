@@ -2,6 +2,7 @@ import { createAliChatModel } from "./core/base/llm";
 import dotenv from 'dotenv';
 import { GitHubClientAxios } from "./git/gitApi";
 import { AIReviewService } from "./services/aiCodeReviewService";
+import { WebhookServer } from "./services/webhookServer";
 dotenv.config();
 
 // async function main() {
@@ -24,15 +25,15 @@ dotenv.config();
 
 async function main() {
   const token = process.env.GITHUB_TOKEN || "";
-  const owner = "StarLorder123";
-  const repo = "amap_flutter";
-
   const service = new AIReviewService(token);
-  const result = await service.reviewLatestCommit(owner, repo, "main");
 
-  console.log("最新 commit:", result.latestCommit.sha);
-  console.log("AI Review 内容:\n", result.review);
-  console.log("评论提交链接:", result.commentResult.html_url);
+  // 启动 Webhook 服务（默认端口 8787，路径 /webhook）
+  const server = new WebhookServer(service, {
+    port: Number(process.env.WEBHOOK_PORT || 8787),
+    path: process.env.WEBHOOK_PATH || "/webhook",
+    githubSecret: process.env.WEBHOOK_SECRET || undefined
+  });
+  server.start();
 }
 
 main().catch(console.error);

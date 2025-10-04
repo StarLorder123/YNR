@@ -1,7 +1,5 @@
 ---
-description:
-globs:
-alwaysApply: true
+alwaysApply: false
 ---
-需要写对应的test测试用例；
+需要写对应的test、vitest测试用例；
 没有明确要求的情况，不需要撰写example以及对应的markdown；
