@@ -63,7 +63,7 @@ export class AIReviewService {
         return { latestCommit, review };
     }
 
-    async reviewCommit(owner: string, repo: string, sha: string) {
+    async reviewCommit(owner: string, repo: string, sha: string, notifyEmail?: string) {
         const files = await this.github.getCommitFiles(owner, repo, sha);
         const diff = files.map((f: { filename: string; patch: string; }) => `diff --git a/${f.filename} b/${f.filename}\n${f.patch}`).join("\n\n");
 
@@ -85,12 +85,28 @@ export class AIReviewService {
             content: review
         });
         if (this.mailer) {
-            const to = process.env.MAIL_TO ?? "";
+            const to = notifyEmail ?? (process.env.MAIL_TO ?? "");
             if (to) {
                 await this.mailer.send(to, `Code Review: ${owner}/${repo}@${sha}`, toHtml(review));
             }
         }
         return { review };
+    }
+
+    async getChangedLineCount(owner: string, repo: string, sha: string): Promise<number> {
+        const files = await this.github.getCommitFiles(owner, repo, sha);
+        let total = 0;
+        for (const f of files as any[]) {
+            const patch: string = (f as any).patch ?? "";
+            // 统计以 '+' 或 '-' 开头但非 '+++'/'---' 的行
+            const lines = patch.split(/\r?\n/);
+            for (const line of lines) {
+                if ((line.startsWith("+") && !line.startsWith("+++")) || (line.startsWith("-") && !line.startsWith("---"))) {
+                    total += 1;
+                }
+            }
+        }
+        return total;
     }
 }
 

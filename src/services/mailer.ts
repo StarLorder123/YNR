@@ -12,7 +12,7 @@ export type SmtpConfig = {
 
 export class SmtpMailer {
   private transporter;
-  private logger = new Logger("mail.log");
+  private logger = new Logger("mail.log", "mailer");
   private from: string;
 
   constructor(config: SmtpConfig) {
